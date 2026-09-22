@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-04-08">
+<meta name="description" content="Network analysis, community detection, and link prediction on 2023 festival lineups to see whether structure alone can explain, and predict, who shares a stage.">
 
-<title>Shreya Gupta</title>
+<title>Do Festival Lineups Follow a Network? – Shreya Gupta</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,76 +68,21 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Shreya Gupta</span>
     </a>
   </div>
@@ -148,13 +93,13 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">home</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">about</span></a>
   </li>  
 </ul>
@@ -168,144 +113,268 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#do-festival-lineups-follow-a-network" id="toc-do-festival-lineups-follow-a-network" class="nav-link active" data-scroll-target="#do-festival-lineups-follow-a-network">Do Festival Lineups Follow a Network?</a>
+  <ul class="collapse">
+  <li><a href="#research-questions-and-motivation" id="toc-research-questions-and-motivation" class="nav-link" data-scroll-target="#research-questions-and-motivation">Research Questions and Motivation</a></li>
+  <li><a href="#network-properties" id="toc-network-properties" class="nav-link" data-scroll-target="#network-properties">Network Properties</a></li>
+  <li><a href="#clustering-a-subgraph-to-detect-communities-modularity-and-betweeness" id="toc-clustering-a-subgraph-to-detect-communities-modularity-and-betweeness" class="nav-link" data-scroll-target="#clustering-a-subgraph-to-detect-communities-modularity-and-betweeness">Clustering a Subgraph to Detect Communities (Modularity and Betweeness)</a></li>
+  <li><a href="#modularity-on-top-us-festivals-lollapalooza-austin-city-limits-and-coachella" id="toc-modularity-on-top-us-festivals-lollapalooza-austin-city-limits-and-coachella" class="nav-link" data-scroll-target="#modularity-on-top-us-festivals-lollapalooza-austin-city-limits-and-coachella">Modularity on Top US Festivals (Lollapalooza, Austin City Limits, and Coachella)</a>
+  <ul class="collapse">
+  <li><a href="#gauging-global-reach-of-top-3-us-festivals-based-on-modularity-clustering" id="toc-gauging-global-reach-of-top-3-us-festivals-based-on-modularity-clustering" class="nav-link" data-scroll-target="#gauging-global-reach-of-top-3-us-festivals-based-on-modularity-clustering">Gauging Global Reach of Top 3 US Festivals Based on Modularity Clustering</a></li>
+  </ul></li>
+  <li><a href="#can-we-predict-new-connections" id="toc-can-we-predict-new-connections" class="nav-link" data-scroll-target="#can-we-predict-new-connections">Can We Predict New Connections?</a></li>
+  <li><a href="#does-the-music-itself-explain-the-communities" id="toc-does-the-music-itself-explain-the-communities" class="nav-link" data-scroll-target="#does-the-music-itself-explain-the-communities">Does the Music Itself Explain the Communities?</a>
+  <ul class="collapse">
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  </ul></li>
+  <li><a href="#takeaway" id="toc-takeaway" class="nav-link" data-scroll-target="#takeaway">Takeaway</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Do Festival Lineups Follow a Network?</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">network-analysis</div>
+    <div class="quarto-category">music</div>
+    <div class="quarto-category">SI-608</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Network analysis, community detection, and link prediction on 2023 festival lineups to see whether structure alone can explain, and predict, who shares a stage.
+  </div>
+</div>
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 8, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
+</header>
 
 
+<section id="do-festival-lineups-follow-a-network" class="level1">
+<h1>Do Festival Lineups Follow a Network?</h1>
+<p><em>Team project for SI 608: Networks, with Lunden Mandigo, Tyrone Pettygrue, and Vaishnavi Venkataraghavan. Full notebooks: <a href="https://github.com/shreya-gupta-um/music-festival-coperformance-network">GitHub</a>.</em></p>
+<section id="research-questions-and-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="research-questions-and-motivation">Research Questions and Motivation</h2>
+<p>Our project investigates whether patterns in artist co-performance networks (artists who appear together at music festivals) can help explain or predict future festival lineups. Specifically, we ask:</p>
+<ul>
+<li>How might a festival-based co-performance network inform which artists perform together at different types of music festivals?</li>
+<li>If we know the headliner of a music festival, can we predict the rest of the lineup by analyzing network proximity among artists who frequently share stages or events? Can we recommend the headliner?</li>
+</ul>
+</section>
+<section id="network-properties" class="level2">
+<h2 class="anchored" data-anchor-id="network-properties">Network Properties</h2>
+<div id="cell-4" class="cell" data-outputid="0c268652-489a-4e6b-bf7b-b6c29a71a3df" data-execution_count="12">
+<div class="cell-output cell-output-stdout">
+<pre><code>{'diameter': 4, 'avg_shortest_path': 2.2830746313835304, 'avg_degree': 272.31536604987934, 'avg_clustering_coeff': 0.9236414851854906}</code></pre>
+</div>
+</div>
+<div id="cell-5" class="cell" data-outputid="ec37f5ae-8b58-4619-c28a-f7797a7fdf14" data-execution_count="13">
+<div class="cell-output cell-output-stdout">
+<pre><code>Density: 0.07304596728805776</code></pre>
+</div>
+</div>
+<div id="cell-6" class="cell" data-outputid="b49e2808-a47a-4b4f-eba6-278ee42785b3" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>These properties indicate a very dense, small-world structure suggesting that most artists are separated by only a few shared events, and clusters of co-performing artists form tightly connected communities.</p>
+<p>We found that the Watts-Strogatz model failed to generate a network that produced a result close to our clustering coefficients (WS: 0.75 vs Ours: 0.92) even when p = 0, which suggests our network is more tightly clustered than a regular lattice. Our assortativity coefficient is 0.313, which is indicative of an assortative network (high degree nodes connect to high degree, and vice versa) similar to those of real world physics co-authorship networks.</p>
+</section>
+<section id="clustering-a-subgraph-to-detect-communities-modularity-and-betweeness" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-a-subgraph-to-detect-communities-modularity-and-betweeness">Clustering a Subgraph to Detect Communities (Modularity and Betweeness)</h2>
+<div id="cell-9" class="cell" data-outputid="81d6fc3b-3e2a-4c13-d1d1-2a8b65b315da" data-execution_count="22">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We randomly sampled about 10% of the network’s total nodes to create graphs that revealed clusters, leveraged clustering methods taught in classes &amp; homeworks (Louvain &amp; Girvan-Newman(first pass)), and found that Louvain was generally better at identifying tight clusters of performers for every subgraph generated. It also has a much larger community structure.</p>
+<p>Betweenness isn’t a good clustering technique for our particular problem because, since we have a strong small world network with an average shortest path of about 2, there are multiple alternate paths that could act as a bridge.</p>
+</section>
+<section id="modularity-on-top-us-festivals-lollapalooza-austin-city-limits-and-coachella" class="level2">
+<h2 class="anchored" data-anchor-id="modularity-on-top-us-festivals-lollapalooza-austin-city-limits-and-coachella">Modularity on Top US Festivals (Lollapalooza, Austin City Limits, and Coachella)</h2>
+<div id="cell-12" class="cell" data-outputid="fabac1ba-7245-4593-e389-95d3ee959f0f" data-execution_count="26">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="gauging-global-reach-of-top-3-us-festivals-based-on-modularity-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="gauging-global-reach-of-top-3-us-festivals-based-on-modularity-clustering">Gauging Global Reach of Top 3 US Festivals Based on Modularity Clustering</h3>
+<p>Artists that featured in these three festivals featured in about 27/30 other festivals, including international ones. After performing modularity clustering on artists that performed at Lollapalooza, Coachella, and Austin City limits (using nodes only from these three festivals), the artist overlap suggests these festivals play a core role in shaping the global touring circuit, bridging different regions and genres. No complete cluster is wholly isolated to one festival, so the clustering is possibly based on other factors like genre and popularity.</p>
+<p>A cursory look found that C3 had a considerable number of pop-focused headliners, while C6 had a considerable number of rock/alternative headliners.</p>
+</section>
+</section>
+<section id="can-we-predict-new-connections" class="level2">
+<h2 class="anchored" data-anchor-id="can-we-predict-new-connections">Can We Predict New Connections?</h2>
+<p>To test whether the network structure carries real signal, not just describes what already happened, we removed a festival’s known artist connections and tried to predict them back using link-prediction features and a logistic regression classifier.</p>
+<div id="cell-16" class="cell" data-outputid="693f0749-0038-4cd5-b9b5-c54c3b49da4a" data-execution_count="36">
+<div class="cell-output cell-output-stdout">
+<pre><code>Predicted probabilities (first 5): [0.04959519 0.05129732 0.12272923 0.04458644 0.06143086]
+Predicted labels (first 5): [0 0 0 0 0]
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="network-analysis,music,SI-608" data-listing-date-sort="1775606400000" data-listing-file-modified-sort="1790089551328" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="710">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/music-festival-networks/index.html" class="no-external">Do Festival Lineups Follow a Network?</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/music-festival-networks/index.html" class="no-external"></a>
+Precision: 0.8154
+Recall: 0.1748
+F1-score: 0.2879
+AUC: 0.7125</code></pre>
 </div>
-<div class="listing-description">
-<a href="./posts/music-festival-networks/index.html" class="no-external">Network analysis, community detection, and link prediction on 2023 festival lineups to see whether structure alone can explain, and predict, who shares a stage.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/music-festival-networks/index.html" class="no-external">
-<div class="listing-date">
-Apr 8, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="machine-learning,public-health,SI-670" data-listing-date-sort="1770595200000" data-listing-file-modified-sort="1790089582487" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="865">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/ibd-prediction/index.html" class="no-external">Predicting Inflammatory Bowel Disease from Survey Data</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/ibd-prediction/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/ibd-prediction/index.html" class="no-external">Applying supervised ML and imbalanced-classification techniques to flag IBD risk from NHIS survey data.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/ibd-prediction/index.html" class="no-external">
-<div class="listing-date">
-Feb 9, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="statistics,public-health,SI-618" data-listing-date-sort="1770595200000" data-listing-file-modified-sort="1790089682599" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1324">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/county-health-poverty/index.html" class="no-external">Health and Poverty Across US Counties</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/county-health-poverty/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/county-health-poverty/index.html" class="no-external">Does poverty track with health outcomes across U.S. counties and states? Statistical testing and clustering on CDC PLACES and Census ACS data.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/county-health-poverty/index.html" class="no-external">
-<div class="listing-date">
-Feb 9, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="spatial,parks,SI-699" data-listing-date-sort="1770508800000" data-listing-file-modified-sort="1790046861504" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2175">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/park-visitation/index.html" class="no-external">American national park visits: location density and visitation rates</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/park-visitation/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/park-visitation/index.html" class="no-external">Are parks visited more when they’re close together? A spatial analysis of clustering and visitation across U.S. national parks.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/park-visitation/index.html" class="no-external">
-<div class="listing-date">
-Feb 8, 2026
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1764633600000" data-listing-file-modified-sort="1774806698191" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="604">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/airfare-viz/index.html" class="no-external">Exploring U.S. Airfare Trends</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/airfare-viz/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/airfare-viz/index.html" class="no-external">Multiple visual encodings of domestic airfare data from 1995–2025, built with Altair.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/airfare-viz/index.html" class="no-external">
-<div class="listing-date">
-Dec 2, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1737936000000" data-listing-file-modified-sort="1774807402144" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1900">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/redlining-det/index.html" class="no-external">Redlining’s long shadow: mobility and opportunity in greater Detroit</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/redlining-det/index.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/redlining-det/index.html" class="no-external">A data-driven look at how 1939 HOLC mortgage grades map onto today’s transit access, car ownership, and income in metro Detroit.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/redlining-det/index.html" class="no-external">
-<div class="listing-date">
-Jan 27, 2025
-</div>
-</a>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
 </div>
-<div class="listing-no-matching d-none">
-No matching items
+<div id="cell-17" class="cell" data-outputid="403f0907-46c6-4bab-effe-c9c146f65d77" data-execution_count="37">
+<div class="cell-output cell-output-display">
+<pre><code>&lt;Figure size 800x600 with 0 Axes&gt;</code></pre>
 </div>
-</div></main> <!-- /main -->
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-8-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion matrix calculated and displayed.</code></pre>
+</div>
+</div>
+</section>
+<section id="does-the-music-itself-explain-the-communities" class="level2">
+<h2 class="anchored" data-anchor-id="does-the-music-itself-explain-the-communities">Does the Music Itself Explain the Communities?</h2>
+<p>Our second question: can we predict which cluster a performer falls into by analyzing musician characteristics, are lineups chosen based on artists’ styles, or mostly by availability and existing connections? We pulled Spotify audio features for each artist and tested whether the communities Louvain found were separable by genre or sound.</p>
+<div id="cell-19" class="cell" data-outputid="52b3fe86-9210-4d0d-d63b-b9bb47d26331">
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Community_Label_Mod</th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>948</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>514</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>382</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8</td>
+<td>374</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>338</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>330</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>244</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">0</td>
+<td>229</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>202</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>106</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>62</td>
+</tr>
+</tbody>
+</table>
+
+</div><br><label><b>dtype:</b> int64</label>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Number of Artists in Community Data: 3729 Artists</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-9-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There aren’t really any differences in music qualities for each community label. This suggest festival lineups are generally similar when it comes to music diversity.</p>
+<p>Every community includes large numbers of EDM style artists. This suggests festivals are choosing EDM artists to perform, and that our data mostly includes EDM artists. A large majority of music festivals are EDM based, while other types of artists perform at smaller niche festivals, a few major conglomerate festivals (i.e.&nbsp;Coachella), or don’t perform at festivals. Music festivals are the main performance space for EDM artists.</p>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p>classification of any kind has some (very little) prediction performance for groups 0, 5, and 9.</p>
+</section>
+</section>
+<section id="takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
+<p>Structurally, festival lineups behave like a small-world network: a handful of major festivals (Lollapalooza, Austin City Limits, Coachella) act as hubs connecting otherwise-separate regional and genre-based touring circuits, and that structure alone was enough to predict some of a festival’s future connections. What structure didn’t explain was much about the music itself, communities of co-performing artists didn’t cleanly separate by genre or audio features, which suggests festival booking is driven more by relationships, geography, and industry circuits than by sound alone.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

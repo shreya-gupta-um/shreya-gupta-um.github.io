@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-02-09">
+<meta name="description" content="Does poverty track with health outcomes across U.S. counties and states? Statistical testing and clustering on CDC PLACES and Census ACS data.">
+
+<title>Health and Poverty Across US Counties – Shreya Gupta</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Shreya Gupta</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">about</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#health-and-poverty-across-us-counties" id="toc-health-and-poverty-across-us-counties" class="nav-link active" data-scroll-target="#health-and-poverty-across-us-counties">Health and Poverty Across US Counties</a>
+  <ul class="collapse">
+  <li><a href="#setting-the-baseline-michigan" id="toc-setting-the-baseline-michigan" class="nav-link" data-scroll-target="#setting-the-baseline-michigan">Setting the Baseline: Michigan</a></li>
+  <li><a href="#does-poverty-predict-health-outcomes-nationwide" id="toc-does-poverty-predict-health-outcomes-nationwide" class="nav-link" data-scroll-target="#does-poverty-predict-health-outcomes-nationwide">Does Poverty Predict Health Outcomes Nationwide?</a></li>
+  <li><a href="#risk-behaviors-and-racial-disparities" id="toc-risk-behaviors-and-racial-disparities" class="nav-link" data-scroll-target="#risk-behaviors-and-racial-disparities">Risk Behaviors and Racial Disparities</a>
+  <ul class="collapse">
+  <li><a href="#positive-vs.-negative-correlations" id="toc-positive-vs.-negative-correlations" class="nav-link" data-scroll-target="#positive-vs.-negative-correlations"><strong>Positive vs.&nbsp;Negative Correlations</strong></a></li>
+  </ul></li>
+  <li><a href="#clustering-counties-and-states" id="toc-clustering-counties-and-states" class="nav-link" data-scroll-target="#clustering-counties-and-states">Clustering Counties and States</a></li>
+  <li><a href="#the-clearest-pattern-state-level-clusters" id="toc-the-clearest-pattern-state-level-clusters" class="nav-link" data-scroll-target="#the-clearest-pattern-state-level-clusters">The Clearest Pattern: State-Level Clusters</a></li>
+  <li><a href="#takeaway" id="toc-takeaway" class="nav-link" data-scroll-target="#takeaway">Takeaway</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Health and Poverty Across US Counties</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">statistics</div>
+    <div class="quarto-category">public-health</div>
+    <div class="quarto-category">SI-618</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Does poverty track with health outcomes across U.S. counties and states? Statistical testing and clustering on CDC PLACES and Census ACS data.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 9, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="health-and-poverty-across-us-counties" class="level1">
+<h1>Health and Poverty Across US Counties</h1>
+<p><em>Team project for SI 618: Data Analysis and Manipulation, with Vaishnavi Venkataraghavan and James Gair. Full notebooks: <a href="https://github.com/shreya-gupta-um/us-county-health-poverty-analysis">GitHub</a>.</em></p>
+<p>We combined CDC PLACES county-level health data with Census ACS poverty and income data to ask a simple question: how much does poverty track with health outcomes across U.S. counties, and does that relationship hold up statistically once you look past Michigan to the rest of the country?</p>
+<section id="setting-the-baseline-michigan" class="level2">
+<h2 class="anchored" data-anchor-id="setting-the-baseline-michigan">Setting the Baseline: Michigan</h2>
+<div id="cell-3" class="cell" data-execution_count="31">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can infer the following:</p>
+<p>The histogram reveals that most counties in Michigan have a median income ranging from <strong>$55k to $70k</strong>. However, there are some extreme tails and outliers–a few counties show median incomes <strong>below $50k</strong> and others above <strong>$90k</strong>. This might suggest that while the majority of counties fall within the middle-income range, there are certain areas with significantly lower or higher incomes which could contribute to regional income disparities.</p>
+<p>The box plot further confirms these trends by highlighting the spread of values.</p>
+</section>
+<section id="does-poverty-predict-health-outcomes-nationwide" class="level2">
+<h2 class="anchored" data-anchor-id="does-poverty-predict-health-outcomes-nationwide">Does Poverty Predict Health Outcomes Nationwide?</h2>
+<p>Moving beyond Michigan, we merged the full CDC PLACES and Census ACS datasets, over 120,000 county-level health records, and tested whether poverty rate meaningfully predicts each health outcome.</p>
+<div id="cell-6" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="this-scatterplot-with-a-regression-line-visualizes-the-relationship-between-poverty-rates-and-health-outcomes-highlighting-how-prevalence-changes-as-poverty-levels-rise." class="level4">
+<h4 class="anchored" data-anchor-id="this-scatterplot-with-a-regression-line-visualizes-the-relationship-between-poverty-rates-and-health-outcomes-highlighting-how-prevalence-changes-as-poverty-levels-rise.">This scatterplot with a regression line visualizes the relationship between <strong>poverty rates</strong> and <strong>health outcomes</strong>, highlighting how prevalence changes as poverty levels rise.</h4>
+<ol type="1">
+<li><strong>Clear Positive Trends</strong></li>
+</ol>
+<ul>
+<li>Four conditions—<strong>Obesity</strong>, <strong>High Blood Pressure</strong>, <strong>Diabetes</strong>, and <strong>Stroke</strong>—exhibit upward trends, meaning they become more prevalent as poverty rates increase.</li>
+<li>This suggests a strong correlation between higher poverty levels and the worsening of these chronic conditions.</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>Strongest Association: Stroke</strong></li>
+</ol>
+<ul>
+<li>Among these conditions, Stroke has the steepest regression slope, suggesting it is most sensitive to poverty rate changes.</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Cancer (Non-Skin or Melanoma): The Exception</strong></li>
+</ol>
+<ul>
+<li>Unlike other conditions, <strong>Cancer</strong> shows a weaker or slightly negative slope, meaning its prevalence is less affected by poverty levels.</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>Distribution &amp; Spread of Data Points</strong></li>
+</ol>
+<ul>
+<li>The scatter cloud varies for different conditions:
+<ul>
+<li>Obesity values are clustered between 25% and 45%, indicating that obesity is widespread but does not fluctuate dramatically between counties.</li>
+<li>Stroke prevalence ranges from 2% to significantly higher values, suggesting it may be more influenced by multiple factors.</li>
+</ul></li>
+</ul>
+<ol start="5" type="1">
+<li><strong>Regression Line &amp; Outliers</strong></li>
+</ol>
+<ul>
+<li>The black regression line visualizes the overall trend, reinforcing the relationship between poverty and health outcomes.</li>
+<li>However, outliers exist at both extremes:
+<ul>
+<li>Low-poverty counties with unexpectedly high health risks.</li>
+<li>High-poverty counties with better-than-expected health outcomes.</li>
+</ul></li>
+</ul>
+<div id="cell-8" class="cell" data-execution_count="22">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="each-bar-represents-the-correlation-coefficient-between-bp_total-poverty-rate-and-a-particular-health-outcome." class="level4">
+<h4 class="anchored" data-anchor-id="each-bar-represents-the-correlation-coefficient-between-bp_total-poverty-rate-and-a-particular-health-outcome.">Each bar represents the <strong>correlation coefficient</strong> between <strong>BP_Total%</strong> (poverty rate) and a particular health outcome.</h4>
+<ol type="1">
+<li><strong>Positive vs.&nbsp;Negative Correlations</strong></li>
+</ol>
+<ul>
+<li>Bars extending to the right of zero indicate positive correlations, meaning the condition becomes more prevalent as poverty increases (e.g., Stroke, Coronary Heart Disease, Diabetes).</li>
+<li>Bars extending to the left indicate a negative correlation, meaning the condition is less prevalent in higher-poverty areas (Cancer).</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>Relative Strength of Correlations</strong></li>
+</ol>
+<ul>
+<li>Stroke has the strongest positive correlation, reinforcing the earlier observation that stroke prevalence is highly sensitive to poverty levels.</li>
+<li>Cancer is the only condition with a negative correlation, suggesting that higher poverty may be linked to lower reported prevalence—possibly due to differences in screening rates, diagnostic access, or underreporting in poorer counties.</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Moderate to Strong Correlations</strong></li>
+</ol>
+<ul>
+<li>Most conditions—Arthritis, Obesity, High Cholesterol, High Blood Pressure, and Diabetes—fall in the moderate to strong positive correlation range (0.3–0.7), suggesting a consistent association between poverty and these chronic diseases.</li>
+<li>Depression (~0.2 correlation) shows a weaker relationship with poverty, indicating that mental health outcomes are influenced by additional socioeconomic or cultural factors beyond income alone.</li>
+</ul>
+</section>
+</section>
+<section id="risk-behaviors-and-racial-disparities" class="level2">
+<h2 class="anchored" data-anchor-id="risk-behaviors-and-racial-disparities">Risk Behaviors and Racial Disparities</h2>
+<p>We also looked at health risk behaviors (smoking, inactivity, and similar) and at how the poverty-health relationship differs across racial groups.</p>
+<div id="cell-11" class="cell" data-execution_count="32">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="each-cell-represents-the-linear-correlation-coefficient-between-a-health-risk-behavior-rows-and-a-health-outcome-columns.-the-color-intensity-reflects-the-strength-and-direction-of-the-correlation." class="level4">
+<h4 class="anchored" data-anchor-id="each-cell-represents-the-linear-correlation-coefficient-between-a-health-risk-behavior-rows-and-a-health-outcome-columns.-the-color-intensity-reflects-the-strength-and-direction-of-the-correlation.">Each cell represents the <strong>linear correlation coefficient</strong> between a <strong>health risk behavior</strong> (rows) and a <strong>health outcome</strong> (columns). The <strong>color intensity</strong> reflects the strength and direction of the correlation.</h4>
+</section>
+<section id="positive-vs.-negative-correlations" class="level3">
+<h3 class="anchored" data-anchor-id="positive-vs.-negative-correlations"><strong>Positive vs.&nbsp;Negative Correlations</strong></h3>
+<ul>
+<li><strong>Warm colors</strong> (reds) indicate <strong>strong positive correlations</strong>, meaning that as the health risk behavior increases, the corresponding health outcome also tends to increase.</li>
+<li><strong>Cool colors</strong> (blues) represent <strong>negative or weaker correlations</strong>, suggesting an inverse or negligible relationship.</li>
+</ul>
+<ol type="1">
+<li><strong>Strong Positive Correlations</strong></li>
+</ol>
+<ul>
+<li>Current cigarette smoking is strongly correlated with COPD and other respiratory diseases, reinforcing well-established links between smoking and lung damage.</li>
+<li>Physical inactivity and short sleep duration exhibit consistent positive correlations with several chronic conditions, suggesting that sedentary lifestyles and poor sleep patterns may contribute to overall health decline.</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>Weaker or Negative Correlations</strong></li>
+</ol>
+<ul>
+<li>Binge drinking appears to have weak or negative correlations with many health outcomes.</li>
+<li>One possible explanation is that binge drinking is more prevalent in relatively wealthier populations, where better access to healthcare and other lifestyle factors may mitigate some of its negative effects.</li>
+<li>However, this claim requires further research to account for confounding factors such as alcohol-related diseases (e.g., liver disease) that might not be captured in this dataset.</li>
+</ul>
+<p><strong>Hispanic or Latino:</strong></p>
+<ol type="1">
+<li><strong>Worse Health Outcomes in Mississippi</strong></li>
+</ol>
+<ul>
+<li>Mississippi has higher rates of arthritis, COPD, obesity, and high blood pressure compared to Alaska, suggesting poorer **health overall.</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>Mental Health and Chronic Illnesses Worse in Mississippi</strong></li>
+</ol>
+<ul>
+<li>Depression and cardiovascular risks are higher in Mississippi.</li>
+</ul>
+<ol start="3" type="1">
+<li><strong>Greater Health Inequality in Mississippi</strong></li>
+</ol>
+<ul>
+<li>Mississippi shows more health variability, especially in obesity and high cholesterol, pointing to wider disparities.</li>
+</ul>
+<ol start="4" type="1">
+<li><strong>Oral Health Worse in Mississippi</strong></li>
+</ol>
+<ul>
+<li>Higher rates of tooth loss in Mississippi suggest economic barriers to dental care.</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>Similar Cancer and Stroke Rates</strong></li>
+</ol>
+<ul>
+<li>Cancer and stroke rates are similar between states, implying factors beyond poverty influence these conditions.</li>
+</ul>
+</section>
+</section>
+<section id="clustering-counties-and-states" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-counties-and-states">Clustering Counties and States</h2>
+<p>Finally, we used K-Means and hierarchical clustering to see whether counties, and states, naturally group into distinct poverty/health profiles without giving the model any labels.</p>
+<div id="ca163341" class="cell" data-execution_count="15">
+<div class="cell-output cell-output-stdout">
+<pre><code>Visualization PCA Explained Variance Ratio (Health Outcomes): [0.66427219 0.17803825]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can gather the following insights from our <strong>two</strong> clusters on health outcomes and poverty levels:</p>
+<section id="cluster-0-lower-poverty-better-health-outcomes" class="level4">
+<h4 class="anchored" data-anchor-id="cluster-0-lower-poverty-better-health-outcomes"><strong>Cluster 0: Lower-Poverty, Better Health Outcomes</strong></h4>
+<ul>
+<li><strong>BP_ Total% is 11.15</strong>, which is <strong>3.23 percentage points below the national average</strong> — indicating this cluster contains <strong>counties with relatively low poverty rates</strong>.</li>
+<li>Health outcomes are generally better than average:
+<ul>
+<li><strong>Obesity (35.89%)</strong>, <strong>diabetes (9.79%)</strong>, <strong>high blood pressure (29.83%)</strong>, and <strong>all teeth lost (12.88%)</strong> are all <strong>lower than the national averages</strong>.</li>
+<li>This cluster is <strong>below the mean</strong> in nearly every major health condition, suggesting healthier populations and potentially better healthcare access.</li>
+<li><strong>Cancer</strong> doesn’t follow this trend, as evidenced by our <strong>Project Part 2</strong> analysis that it doesn’t have a positive correlation with increasing poverty levels.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="cluster-1-higher-poverty-poorer-health-outcomes" class="level4">
+<h4 class="anchored" data-anchor-id="cluster-1-higher-poverty-poorer-health-outcomes"><strong>Cluster 1: Higher-Poverty, Poorer Health Outcomes</strong></h4>
+<ul>
+<li><strong>BP_ Total% is 19.20</strong>, which is <strong>4.81 percentage points above the national average</strong> — showing this cluster includes <strong>counties with significantly higher poverty levels</strong>.</li>
+<li>Health outcomes are worse across the board:
+<ul>
+<li>Higher rates of <strong>obesity (41.26%)</strong>, <strong>diabetes (13.18%)</strong>, <strong>tooth loss (21.22%)</strong>, and <strong>stroke (4.05%)</strong>.</li>
+<li>This cluster is <strong>consistently above the overall mean</strong> in almost all categories, showing clear signs of health disparities.</li>
+<li><strong>Cancer</strong>, again, doesn’t follow this trend.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+<section id="key-takeaway" class="level4">
+<h4 class="anchored" data-anchor-id="key-takeaway"><strong>Key Takeaway</strong></h4>
+<ul>
+<li>These results clearly separate counties into two groups that reflect <strong>socioeconomic and health divides</strong>.</li>
+<li><strong>Cluster 0</strong> includes healthier, wealthier counties, while <strong>Cluster 1</strong> includes more disadvantaged areas with worse health outcomes.</li>
+<li>This supports previous findings from <strong>Project Part 2</strong> that poverty is deeply tied to public health — and further validates the use of clustering to uncover structural patterns in population health data.</li>
+</ul>
+</section>
+</section>
+<section id="the-clearest-pattern-state-level-clusters" class="level2">
+<h2 class="anchored" data-anchor-id="the-clearest-pattern-state-level-clusters">The Clearest Pattern: State-Level Clusters</h2>
+<div id="37fe356d" class="cell" data-execution_count="33">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The dendrogram reveals that <strong>Hawaii and New Jersey</strong> form a unique cluster, standing apart from all other states — reflecting their <strong>exceptionally low total poverty rates and strong health outcomes</strong>. At the other end, states like <strong>Mississippi, Louisiana, West Virginia, and Alabama</strong> are tightly grouped, highlighting their <strong>shared high total poverty and the worst health metrics</strong>. A large middle group of states (e.g., <strong>Wisconsin, Pennsylvania, Colorado, Iowa</strong>) clusters closer together, suggesting <strong>moderate poverty levels and relatively balanced health profiles</strong>.</p>
+</section>
+<section id="takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
+<p>Across every level of analysis, poverty and health outcomes moved together, poorer counties and states showed consistently worse rates of chronic disease, and clustering confirmed it wasn’t just a Michigan pattern. Hawaii and New Jersey stood out nationally as the healthiest, wealthiest cluster, while high-poverty Southern states clustered tightly together on nearly every health metric we tested.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -2,6 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/music-festival-networks/index.html",
+      "/posts/ibd-prediction/index.html",
+      "/posts/county-health-poverty/index.html",
       "/posts/park-visitation/index.html",
       "/posts/airfare-viz/index.html",
       "/posts/redlining-det/index.html"
