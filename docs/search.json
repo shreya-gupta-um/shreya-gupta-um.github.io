@@ -4,7 +4,7 @@
     "href": "about.html",
     "title": "about",
     "section": "",
-    "text": "Research notes and explorations from Shreya Gupta (sweeterfiction). Posts here are mostly data analysis, visualization, and methodology — often rendered directly from Jupyter notebooks.\nYou can find me on GitHub and LinkedIn."
+    "text": "Research notes and explorations in data analysis, visualization, and methodology — often rendered directly from Jupyter notebooks.\nYou can find me on GitHub and LinkedIn."
   },
   {
     "objectID": "posts/redlining-det/index.html",
@@ -156,7 +156,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "sweeterfiction § blog",
+    "title": "Shreya Gupta",
     "section": "",
     "text": "American national park visits: location density and visitation rates\n\n\n\n\n\nAre parks visited more when they’re close together? A spatial analysis of clustering and visitation across U.S. national parks.\n\n\n\n\n\nFeb 8, 2026\n\n\n\n\n\n\n\nExploring U.S. Airfare Trends\n\n\n\n\n\nMultiple visual encodings of domestic airfare data from 1995–2025, built with Altair.\n\n\n\n\n\nDec 2, 2025\n\n\n\n\n\n\n\nRedlining’s long shadow: mobility and opportunity in greater Detroit\n\n\n\n\n\nA data-driven look at how 1939 HOLC mortgage grades map onto today’s transit access, car ownership, and income in metro Detroit.\n\n\n\n\n\nJan 27, 2025\n\n\n\n\n\n\nNo matching items"
   }
