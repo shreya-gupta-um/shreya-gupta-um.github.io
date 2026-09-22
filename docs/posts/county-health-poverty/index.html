@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-02-09">
+<meta name="dcterms.date" content="2024-11-20">
 <meta name="description" content="Does poverty track with health outcomes across U.S. counties and states? Statistical testing and clustering on CDC PLACES and Census ACS data.">
 
 <title>Health and Poverty Across US Counties – Shreya Gupta</title>
@@ -115,18 +115,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#health-and-poverty-across-us-counties" id="toc-health-and-poverty-across-us-counties" class="nav-link active" data-scroll-target="#health-and-poverty-across-us-counties">Health and Poverty Across US Counties</a>
-  <ul class="collapse">
-  <li><a href="#setting-the-baseline-michigan" id="toc-setting-the-baseline-michigan" class="nav-link" data-scroll-target="#setting-the-baseline-michigan">Setting the Baseline: Michigan</a></li>
+  <li><a href="#setting-a-baseline-in-michigan" id="toc-setting-a-baseline-in-michigan" class="nav-link active" data-scroll-target="#setting-a-baseline-in-michigan">Setting a Baseline in Michigan</a></li>
   <li><a href="#does-poverty-predict-health-outcomes-nationwide" id="toc-does-poverty-predict-health-outcomes-nationwide" class="nav-link" data-scroll-target="#does-poverty-predict-health-outcomes-nationwide">Does Poverty Predict Health Outcomes Nationwide?</a></li>
-  <li><a href="#risk-behaviors-and-racial-disparities" id="toc-risk-behaviors-and-racial-disparities" class="nav-link" data-scroll-target="#risk-behaviors-and-racial-disparities">Risk Behaviors and Racial Disparities</a>
-  <ul class="collapse">
-  <li><a href="#positive-vs.-negative-correlations" id="toc-positive-vs.-negative-correlations" class="nav-link" data-scroll-target="#positive-vs.-negative-correlations"><strong>Positive vs.&nbsp;Negative Correlations</strong></a></li>
-  </ul></li>
-  <li><a href="#clustering-counties-and-states" id="toc-clustering-counties-and-states" class="nav-link" data-scroll-target="#clustering-counties-and-states">Clustering Counties and States</a></li>
+  <li><a href="#risk-behaviors-and-racial-disparities" id="toc-risk-behaviors-and-racial-disparities" class="nav-link" data-scroll-target="#risk-behaviors-and-racial-disparities">Risk Behaviors and Racial Disparities</a></li>
+  <li><a href="#clustering-counties-nationally" id="toc-clustering-counties-nationally" class="nav-link" data-scroll-target="#clustering-counties-nationally">Clustering Counties Nationally</a></li>
   <li><a href="#the-clearest-pattern-state-level-clusters" id="toc-the-clearest-pattern-state-level-clusters" class="nav-link" data-scroll-target="#the-clearest-pattern-state-level-clusters">The Clearest Pattern: State-Level Clusters</a></li>
-  <li><a href="#takeaway" id="toc-takeaway" class="nav-link" data-scroll-target="#takeaway">Takeaway</a></li>
-  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -156,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 9, 2026</p>
+      <p class="date">November 20, 2024</p>
     </div>
   </div>
   
@@ -168,12 +164,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="health-and-poverty-across-us-counties" class="level1">
-<h1>Health and Poverty Across US Counties</h1>
-<p><em>Team project for SI 618: Data Analysis and Manipulation, with Vaishnavi Venkataraghavan and James Gair. Full notebooks: <a href="https://github.com/shreya-gupta-um/us-county-health-poverty-analysis">GitHub</a>.</em></p>
-<p>We combined CDC PLACES county-level health data with Census ACS poverty and income data to ask a simple question: how much does poverty track with health outcomes across U.S. counties, and does that relationship hold up statistically once you look past Michigan to the rest of the country?</p>
-<section id="setting-the-baseline-michigan" class="level2">
-<h2 class="anchored" data-anchor-id="setting-the-baseline-michigan">Setting the Baseline: Michigan</h2>
+<p>This project investigates how closely poverty tracks with health outcomes across U.S. counties, and whether that relationship holds up once the analysis moves past a single state to a national, statistically tested comparison. Starting from Michigan and then merging CDC PLACES county-level health data, over 120,000 county-level health records, with Census American Community Survey (ACS) poverty and income estimates across 3,221 counties, this project asks three questions: does poverty rate meaningfully predict chronic-disease prevalence, which health risk behaviors and racial disparities travel alongside that relationship, and do counties and states naturally sort into distinct health-poverty profiles without being told the answer in advance?</p>
+<section id="setting-a-baseline-in-michigan" class="level2">
+<h2 class="anchored" data-anchor-id="setting-a-baseline-in-michigan">Setting a Baseline in Michigan</h2>
 <div id="cell-3" class="cell" data-execution_count="31">
 <div class="cell-output cell-output-display">
 <div>
@@ -183,13 +176,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>We can infer the following:</p>
-<p>The histogram reveals that most counties in Michigan have a median income ranging from <strong>$55k to $70k</strong>. However, there are some extreme tails and outliers–a few counties show median incomes <strong>below $50k</strong> and others above <strong>$90k</strong>. This might suggest that while the majority of counties fall within the middle-income range, there are certain areas with significantly lower or higher incomes which could contribute to regional income disparities.</p>
-<p>The box plot further confirms these trends by highlighting the spread of values.</p>
+<p>Before scaling up nationally, the analysis started close to home. Michigan’s county-level median household income clusters between roughly $55,000 and $70,000, with a visible tail at both ends: a handful of counties fall below $50,000, and a few climb above $90,000. That spread previewed the pattern the national analysis would later confirm at scale: income variation across counties is real, and it is not evenly distributed.</p>
 </section>
 <section id="does-poverty-predict-health-outcomes-nationwide" class="level2">
 <h2 class="anchored" data-anchor-id="does-poverty-predict-health-outcomes-nationwide">Does Poverty Predict Health Outcomes Nationwide?</h2>
-<p>Moving beyond Michigan, we merged the full CDC PLACES and Census ACS datasets, over 120,000 county-level health records, and tested whether poverty rate meaningfully predicts each health outcome.</p>
+<p>Moving beyond Michigan, the full CDC PLACES and Census ACS datasets were merged nationally and tested for whether poverty rate meaningfully predicts each health outcome.</p>
 <div id="cell-6" class="cell" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
@@ -199,48 +190,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<section id="this-scatterplot-with-a-regression-line-visualizes-the-relationship-between-poverty-rates-and-health-outcomes-highlighting-how-prevalence-changes-as-poverty-levels-rise." class="level4">
-<h4 class="anchored" data-anchor-id="this-scatterplot-with-a-regression-line-visualizes-the-relationship-between-poverty-rates-and-health-outcomes-highlighting-how-prevalence-changes-as-poverty-levels-rise.">This scatterplot with a regression line visualizes the relationship between <strong>poverty rates</strong> and <strong>health outcomes</strong>, highlighting how prevalence changes as poverty levels rise.</h4>
-<ol type="1">
-<li><strong>Clear Positive Trends</strong></li>
-</ol>
-<ul>
-<li>Four conditions—<strong>Obesity</strong>, <strong>High Blood Pressure</strong>, <strong>Diabetes</strong>, and <strong>Stroke</strong>—exhibit upward trends, meaning they become more prevalent as poverty rates increase.</li>
-<li>This suggests a strong correlation between higher poverty levels and the worsening of these chronic conditions.</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>Strongest Association: Stroke</strong></li>
-</ol>
-<ul>
-<li>Among these conditions, Stroke has the steepest regression slope, suggesting it is most sensitive to poverty rate changes.</li>
-</ul>
-<ol start="3" type="1">
-<li><strong>Cancer (Non-Skin or Melanoma): The Exception</strong></li>
-</ol>
-<ul>
-<li>Unlike other conditions, <strong>Cancer</strong> shows a weaker or slightly negative slope, meaning its prevalence is less affected by poverty levels.</li>
-</ul>
-<ol start="4" type="1">
-<li><strong>Distribution &amp; Spread of Data Points</strong></li>
-</ol>
-<ul>
-<li>The scatter cloud varies for different conditions:
-<ul>
-<li>Obesity values are clustered between 25% and 45%, indicating that obesity is widespread but does not fluctuate dramatically between counties.</li>
-<li>Stroke prevalence ranges from 2% to significantly higher values, suggesting it may be more influenced by multiple factors.</li>
-</ul></li>
-</ul>
-<ol start="5" type="1">
-<li><strong>Regression Line &amp; Outliers</strong></li>
-</ol>
-<ul>
-<li>The black regression line visualizes the overall trend, reinforcing the relationship between poverty and health outcomes.</li>
-<li>However, outliers exist at both extremes:
-<ul>
-<li>Low-poverty counties with unexpectedly high health risks.</li>
-<li>High-poverty counties with better-than-expected health outcomes.</li>
-</ul></li>
-</ul>
+<p>Across the full national dataset, four chronic conditions rose consistently with county poverty rate: obesity, high blood pressure, diabetes, and stroke. Of the six outcomes tested, stroke’s relationship to poverty was the steepest and the most statistically pronounced, an analysis of variance across low-, medium-, and high-poverty counties put stroke’s F-statistic at 1,619.59, ahead of coronary heart disease (1,194.28), diabetes (1,176.48), high blood pressure (1,105.12), COPD (1,004.79), and arthritis (693.80). Cancer (non-skin or melanoma) was the outlier: it showed a weak, slightly negative relationship to poverty rather than the positive one every other condition displayed.</p>
 <div id="cell-8" class="cell" data-execution_count="22">
 <div class="cell-output cell-output-display">
 <div>
@@ -250,35 +200,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-</section>
-<section id="each-bar-represents-the-correlation-coefficient-between-bp_total-poverty-rate-and-a-particular-health-outcome." class="level4">
-<h4 class="anchored" data-anchor-id="each-bar-represents-the-correlation-coefficient-between-bp_total-poverty-rate-and-a-particular-health-outcome.">Each bar represents the <strong>correlation coefficient</strong> between <strong>BP_Total%</strong> (poverty rate) and a particular health outcome.</h4>
-<ol type="1">
-<li><strong>Positive vs.&nbsp;Negative Correlations</strong></li>
-</ol>
-<ul>
-<li>Bars extending to the right of zero indicate positive correlations, meaning the condition becomes more prevalent as poverty increases (e.g., Stroke, Coronary Heart Disease, Diabetes).</li>
-<li>Bars extending to the left indicate a negative correlation, meaning the condition is less prevalent in higher-poverty areas (Cancer).</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>Relative Strength of Correlations</strong></li>
-</ol>
-<ul>
-<li>Stroke has the strongest positive correlation, reinforcing the earlier observation that stroke prevalence is highly sensitive to poverty levels.</li>
-<li>Cancer is the only condition with a negative correlation, suggesting that higher poverty may be linked to lower reported prevalence—possibly due to differences in screening rates, diagnostic access, or underreporting in poorer counties.</li>
-</ul>
-<ol start="3" type="1">
-<li><strong>Moderate to Strong Correlations</strong></li>
-</ol>
-<ul>
-<li>Most conditions—Arthritis, Obesity, High Cholesterol, High Blood Pressure, and Diabetes—fall in the moderate to strong positive correlation range (0.3–0.7), suggesting a consistent association between poverty and these chronic diseases.</li>
-<li>Depression (~0.2 correlation) shows a weaker relationship with poverty, indicating that mental health outcomes are influenced by additional socioeconomic or cultural factors beyond income alone.</li>
-</ul>
-</section>
+<p>A correlation breakdown across the same six outcomes confirmed the pattern: nearly every chronic condition, arthritis, obesity, high cholesterol, high blood pressure, diabetes, correlated positively with poverty rate at a moderate-to-strong level (0.3 to 0.7). Depression correlated more weakly (around 0.2), suggesting mental-health outcomes are shaped by more than income alone. Cancer was the single negative correlation in the set, a pattern that likely says as much about screening and diagnostic access as it does about underlying disease risk: lower-poverty counties may simply catch and report more cancer, not have less of it.</p>
 </section>
 <section id="risk-behaviors-and-racial-disparities" class="level2">
 <h2 class="anchored" data-anchor-id="risk-behaviors-and-racial-disparities">Risk Behaviors and Racial Disparities</h2>
-<p>We also looked at health risk behaviors (smoking, inactivity, and similar) and at how the poverty-health relationship differs across racial groups.</p>
+<p>The analysis also looked at health risk behaviors (smoking, inactivity, sleep, and similar) and at how the poverty-health relationship differs across racial groups.</p>
 <div id="cell-11" class="cell" data-execution_count="32">
 <div class="cell-output cell-output-display">
 <div>
@@ -288,66 +214,12 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<section id="each-cell-represents-the-linear-correlation-coefficient-between-a-health-risk-behavior-rows-and-a-health-outcome-columns.-the-color-intensity-reflects-the-strength-and-direction-of-the-correlation." class="level4">
-<h4 class="anchored" data-anchor-id="each-cell-represents-the-linear-correlation-coefficient-between-a-health-risk-behavior-rows-and-a-health-outcome-columns.-the-color-intensity-reflects-the-strength-and-direction-of-the-correlation.">Each cell represents the <strong>linear correlation coefficient</strong> between a <strong>health risk behavior</strong> (rows) and a <strong>health outcome</strong> (columns). The <strong>color intensity</strong> reflects the strength and direction of the correlation.</h4>
+<p>Health risk behaviors followed a similarly legible pattern. Smoking correlated strongly with COPD and other respiratory disease, consistent with the well-established biological link. Physical inactivity and short sleep duration also correlated positively with several chronic conditions, suggesting sedentary lifestyles and poor sleep compound the same risk. Binge drinking broke the pattern: its correlations with health outcomes were weak or negative, plausibly because binge drinking is more common in wealthier counties with better healthcare access, though confirming that would require controlling for confounders, like alcohol-specific diseases, that this dataset doesn’t capture.</p>
+<p>Breaking the poverty-health relationship out by race surfaced a sharper picture within the Hispanic or Latino population specifically: Mississippi shows consistently worse outcomes than Alaska across arthritis, COPD, obesity, high blood pressure, and depression, along with more tooth loss, a proxy for economic barriers to dental care, and wider variability overall, evidence of deeper within-state health inequality rather than just a higher average. Cancer and stroke rates were the exception, staying similar across both states, in line with the national finding that cancer doesn’t track poverty the way other conditions do.</p>
 </section>
-<section id="positive-vs.-negative-correlations" class="level3">
-<h3 class="anchored" data-anchor-id="positive-vs.-negative-correlations"><strong>Positive vs.&nbsp;Negative Correlations</strong></h3>
-<ul>
-<li><strong>Warm colors</strong> (reds) indicate <strong>strong positive correlations</strong>, meaning that as the health risk behavior increases, the corresponding health outcome also tends to increase.</li>
-<li><strong>Cool colors</strong> (blues) represent <strong>negative or weaker correlations</strong>, suggesting an inverse or negligible relationship.</li>
-</ul>
-<ol type="1">
-<li><strong>Strong Positive Correlations</strong></li>
-</ol>
-<ul>
-<li>Current cigarette smoking is strongly correlated with COPD and other respiratory diseases, reinforcing well-established links between smoking and lung damage.</li>
-<li>Physical inactivity and short sleep duration exhibit consistent positive correlations with several chronic conditions, suggesting that sedentary lifestyles and poor sleep patterns may contribute to overall health decline.</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>Weaker or Negative Correlations</strong></li>
-</ol>
-<ul>
-<li>Binge drinking appears to have weak or negative correlations with many health outcomes.</li>
-<li>One possible explanation is that binge drinking is more prevalent in relatively wealthier populations, where better access to healthcare and other lifestyle factors may mitigate some of its negative effects.</li>
-<li>However, this claim requires further research to account for confounding factors such as alcohol-related diseases (e.g., liver disease) that might not be captured in this dataset.</li>
-</ul>
-<p><strong>Hispanic or Latino:</strong></p>
-<ol type="1">
-<li><strong>Worse Health Outcomes in Mississippi</strong></li>
-</ol>
-<ul>
-<li>Mississippi has higher rates of arthritis, COPD, obesity, and high blood pressure compared to Alaska, suggesting poorer **health overall.</li>
-</ul>
-<ol start="2" type="1">
-<li><strong>Mental Health and Chronic Illnesses Worse in Mississippi</strong></li>
-</ol>
-<ul>
-<li>Depression and cardiovascular risks are higher in Mississippi.</li>
-</ul>
-<ol start="3" type="1">
-<li><strong>Greater Health Inequality in Mississippi</strong></li>
-</ol>
-<ul>
-<li>Mississippi shows more health variability, especially in obesity and high cholesterol, pointing to wider disparities.</li>
-</ul>
-<ol start="4" type="1">
-<li><strong>Oral Health Worse in Mississippi</strong></li>
-</ol>
-<ul>
-<li>Higher rates of tooth loss in Mississippi suggest economic barriers to dental care.</li>
-</ul>
-<ol start="5" type="1">
-<li><strong>Similar Cancer and Stroke Rates</strong></li>
-</ol>
-<ul>
-<li>Cancer and stroke rates are similar between states, implying factors beyond poverty influence these conditions.</li>
-</ul>
-</section>
-</section>
-<section id="clustering-counties-and-states" class="level2">
-<h2 class="anchored" data-anchor-id="clustering-counties-and-states">Clustering Counties and States</h2>
-<p>Finally, we used K-Means and hierarchical clustering to see whether counties, and states, naturally group into distinct poverty/health profiles without giving the model any labels.</p>
+<section id="clustering-counties-nationally" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-counties-nationally">Clustering Counties Nationally</h2>
+<p>Correlation shows a relationship exists; clustering tests whether it is strong enough to sort counties into distinct groups without any labels attached. K-Means clustering was run on health outcomes and poverty, evaluated across k = 2 to 15 by silhouette score.</p>
 <div id="ca163341" class="cell" data-execution_count="15">
 <div class="cell-output cell-output-stdout">
 <pre><code>Visualization PCA Explained Variance Ratio (Health Outcomes): [0.66427219 0.17803825]</code></pre>
@@ -360,44 +232,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>We can gather the following insights from our <strong>two</strong> clusters on health outcomes and poverty levels:</p>
-<section id="cluster-0-lower-poverty-better-health-outcomes" class="level4">
-<h4 class="anchored" data-anchor-id="cluster-0-lower-poverty-better-health-outcomes"><strong>Cluster 0: Lower-Poverty, Better Health Outcomes</strong></h4>
-<ul>
-<li><strong>BP_ Total% is 11.15</strong>, which is <strong>3.23 percentage points below the national average</strong> — indicating this cluster contains <strong>counties with relatively low poverty rates</strong>.</li>
-<li>Health outcomes are generally better than average:
-<ul>
-<li><strong>Obesity (35.89%)</strong>, <strong>diabetes (9.79%)</strong>, <strong>high blood pressure (29.83%)</strong>, and <strong>all teeth lost (12.88%)</strong> are all <strong>lower than the national averages</strong>.</li>
-<li>This cluster is <strong>below the mean</strong> in nearly every major health condition, suggesting healthier populations and potentially better healthcare access.</li>
-<li><strong>Cancer</strong> doesn’t follow this trend, as evidenced by our <strong>Project Part 2</strong> analysis that it doesn’t have a positive correlation with increasing poverty levels.</li>
-</ul></li>
-</ul>
-<hr>
-</section>
-<section id="cluster-1-higher-poverty-poorer-health-outcomes" class="level4">
-<h4 class="anchored" data-anchor-id="cluster-1-higher-poverty-poorer-health-outcomes"><strong>Cluster 1: Higher-Poverty, Poorer Health Outcomes</strong></h4>
-<ul>
-<li><strong>BP_ Total% is 19.20</strong>, which is <strong>4.81 percentage points above the national average</strong> — showing this cluster includes <strong>counties with significantly higher poverty levels</strong>.</li>
-<li>Health outcomes are worse across the board:
-<ul>
-<li>Higher rates of <strong>obesity (41.26%)</strong>, <strong>diabetes (13.18%)</strong>, <strong>tooth loss (21.22%)</strong>, and <strong>stroke (4.05%)</strong>.</li>
-<li>This cluster is <strong>consistently above the overall mean</strong> in almost all categories, showing clear signs of health disparities.</li>
-<li><strong>Cancer</strong>, again, doesn’t follow this trend.</li>
-</ul></li>
-</ul>
-<hr>
-</section>
-<section id="key-takeaway" class="level4">
-<h4 class="anchored" data-anchor-id="key-takeaway"><strong>Key Takeaway</strong></h4>
-<ul>
-<li>These results clearly separate counties into two groups that reflect <strong>socioeconomic and health divides</strong>.</li>
-<li><strong>Cluster 0</strong> includes healthier, wealthier counties, while <strong>Cluster 1</strong> includes more disadvantaged areas with worse health outcomes.</li>
-<li>This supports previous findings from <strong>Project Part 2</strong> that poverty is deeply tied to public health — and further validates the use of clustering to uncover structural patterns in population health data.</li>
-</ul>
-</section>
+<p>The best fit landed at just two clusters (silhouette = 0.379), the simplest possible split, but not a weak one. Cluster 0, lower-poverty counties, averaged a poverty rate of 11.15%, about 3.2 points below the roughly 14.4% national mean, and ran below average on nearly every outcome: 35.89% obesity, 9.79% diabetes, 29.83% high blood pressure, 12.88% total tooth loss. Cluster 1, higher-poverty counties, averaged 19.20% poverty, nearly 5 points above the mean, and ran above average across the board: 41.26% obesity, 13.18% diabetes, 21.22% tooth loss, 4.05% stroke prevalence. Cancer again broke from the pattern, showing no consistent separation between the two clusters, reinforcing that whatever drives its relationship to poverty isn’t the same mechanism driving every other condition.</p>
 </section>
 <section id="the-clearest-pattern-state-level-clusters" class="level2">
 <h2 class="anchored" data-anchor-id="the-clearest-pattern-state-level-clusters">The Clearest Pattern: State-Level Clusters</h2>
+<p>The same clustering approach applied at the state level, rather than the county level, and repeated separately for health outcomes, risk behaviors, and racial breakdowns, produced the cleanest split of the entire analysis. Health-outcome clustering favored two groups (silhouette = 0.379), risk-behavior clustering favored two as well with a stronger fit (silhouette = 0.419), and racial-breakdown clustering favored two groups too, though with the weakest separation of the three (silhouette = 0.309), evidence that race adds less independent structure to the clustering than health outcomes or behavior do once poverty is already accounted for.</p>
 <div id="37fe356d" class="cell" data-execution_count="33">
 <div class="cell-output cell-output-display">
 <div>
@@ -407,14 +246,26 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>The dendrogram reveals that <strong>Hawaii and New Jersey</strong> form a unique cluster, standing apart from all other states — reflecting their <strong>exceptionally low total poverty rates and strong health outcomes</strong>. At the other end, states like <strong>Mississippi, Louisiana, West Virginia, and Alabama</strong> are tightly grouped, highlighting their <strong>shared high total poverty and the worst health metrics</strong>. A large middle group of states (e.g., <strong>Wisconsin, Pennsylvania, Colorado, Iowa</strong>) clusters closer together, suggesting <strong>moderate poverty levels and relatively balanced health profiles</strong>.</p>
+<p>A hierarchical dendrogram of health outcomes and poverty made the same finding visually explicit. Hawaii and New Jersey broke off into their own cluster entirely, distinguished by exceptionally low poverty and strong health outcomes. At the other end, Mississippi, Louisiana, West Virginia, and Alabama grouped tightly together, sharing both high poverty and the worst health metrics in the dataset. A larger middle cluster, states like Wisconsin, Pennsylvania, Colorado, and Iowa, sat between the two extremes with moderate poverty and comparatively balanced health profiles. A separate dendrogram built on risk behaviors alone reproduced nearly the same split: states like New Mexico, South Carolina, Georgia, and Oklahoma clustered around elevated smoking, inactivity, and poor sleep, while Maryland, Connecticut, New Jersey, and Hawaii clustered around healthier behavior patterns.</p>
 </section>
-<section id="takeaway" class="level2">
-<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
-<p>Across every level of analysis, poverty and health outcomes moved together, poorer counties and states showed consistently worse rates of chronic disease, and clustering confirmed it wasn’t just a Michigan pattern. Hawaii and New Jersey stood out nationally as the healthiest, wealthiest cluster, while high-poverty Southern states clustered tightly together on nearly every health metric we tested.</p>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Across every level of analysis tested, Michigan’s counties, the full national county dataset, and clustering at both the county and state level, poverty and health outcomes moved together. Poorer counties and states showed consistently worse rates of chronic disease, and unsupervised clustering, run without being told which counties were poor or healthy, converged on the same two groups every time. Hawaii and New Jersey stood out nationally as the healthiest, wealthiest cluster; high-poverty Southern states clustered tightly together on nearly every health metric tested. Cancer was the one consistent exception to an otherwise consistent pattern, a reminder that not every health outcome responds to poverty the same way, and that screening access and diagnostic patterns deserve their own investigation.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>The CDC PLACES data is cross-sectional, a single year’s snapshot rather than a trend, and several measures are self-reported, which introduces reporting bias that could vary systematically with income or education. County-level aggregation also masks within-county disparities: a county’s average obscures how unevenly poverty and health can be distributed inside its own borders. And because health and poverty are correlated rather than experimentally manipulated, none of this establishes that poverty causes worse health outcomes, only that the two move together closely and consistently enough to be useful for identifying where public-health intervention might matter most.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>CDC. <a href="https://data.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-County-Data-20/swc5-untb/about_data">PLACES: Local Data for Better Health, County Data</a>.</li>
+<li>U.S. Census Bureau. <a href="https://www.census.gov/data/developers/data-sets.html">American Community Survey 5-Year Estimates</a>.</li>
+<li>Marmot, M. (2005). Social determinants of health inequalities. <em>The Lancet</em>, 365(9464), 1099-1104.</li>
+</ul>
+<p><em>Team: Shreya Gupta, Vaishnavi Venkataraghavan, James Gair. Course: SI 618, University of Michigan.</em></p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

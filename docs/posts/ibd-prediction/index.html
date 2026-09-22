@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-02-09">
-<meta name="description" content="Applying supervised ML and imbalanced-classification techniques to flag IBD risk from NHIS survey data.">
+<meta name="dcterms.date" content="2025-12-03">
+<meta name="description" content="Applying supervised ML and imbalanced-classification techniques to flag severe IBD risk from two years of National Health Interview Survey data.">
 
 <title>Predicting Inflammatory Bowel Disease from Survey Data – Shreya Gupta</title>
 <style>
@@ -118,13 +118,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#predicting-inflammatory-bowel-disease-from-survey-data" id="toc-predicting-inflammatory-bowel-disease-from-survey-data" class="nav-link active" data-scroll-target="#predicting-inflammatory-bowel-disease-from-survey-data">Predicting Inflammatory Bowel Disease from Survey Data</a>
-  <ul class="collapse">
-  <li><a href="#what-separates-ibd-and-non-ibd-respondents" id="toc-what-separates-ibd-and-non-ibd-respondents" class="nav-link" data-scroll-target="#what-separates-ibd-and-non-ibd-respondents">What Separates IBD and Non-IBD Respondents?</a></li>
+  <li><a href="#what-separates-ibd-and-non-ibd-respondents" id="toc-what-separates-ibd-and-non-ibd-respondents" class="nav-link active" data-scroll-target="#what-separates-ibd-and-non-ibd-respondents">What Separates IBD and Non-IBD Respondents?</a></li>
   <li><a href="#why-simple-separation-doesnt-work" id="toc-why-simple-separation-doesnt-work" class="nav-link" data-scroll-target="#why-simple-separation-doesnt-work">Why Simple Separation Doesn’t Work</a></li>
   <li><a href="#modeling-an-imbalanced-rare-outcome" id="toc-modeling-an-imbalanced-rare-outcome" class="nav-link" data-scroll-target="#modeling-an-imbalanced-rare-outcome">Modeling an Imbalanced, Rare Outcome</a></li>
-  <li><a href="#takeaway" id="toc-takeaway" class="nav-link" data-scroll-target="#takeaway">Takeaway</a></li>
-  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
@@ -143,7 +142,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div>
   <div class="description">
-    Applying supervised ML and imbalanced-classification techniques to flag IBD risk from NHIS survey data.
+    Applying supervised ML and imbalanced-classification techniques to flag severe IBD risk from two years of National Health Interview Survey data.
   </div>
 </div>
 
@@ -154,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 9, 2026</p>
+      <p class="date">December 3, 2025</p>
     </div>
   </div>
   
@@ -166,19 +165,11 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="predicting-inflammatory-bowel-disease-from-survey-data" class="level1">
-<h1>Predicting Inflammatory Bowel Disease from Survey Data</h1>
-<p><em>Final project for SI 670: Applied Machine Learning. Full notebook: <a href="https://github.com/shreya-gupta-um/IBD-NHIS-Prediction">GitHub</a>.</em></p>
-<p>Inflammatory Bowel Disease is rare enough in the general population that predicting it from survey data is fundamentally a class-imbalance problem. Using two years of National Health Interview Survey (NHIS) data, I tested how far feature selection, resampling, and ensemble methods could get a model toward flagging IBD risk from self-reported health and demographic data.</p>
+<p>This project investigates how far machine learning can go in flagging a rare chronic condition, inflammatory bowel disease, from routine health-survey responses, and what that predictive ceiling reveals about the limits of survey-based screening. Using two years (2023 and 2024) of National Health Interview Survey (NHIS) data, this project treats severe IBD as fundamentally a class-imbalance problem before it is a feature-engineering one: IBD is rare enough in the general population that a model predicting “no IBD” for every respondent would already score deceptively well on plain accuracy.</p>
 <section id="what-separates-ibd-and-non-ibd-respondents" class="level2">
 <h2 class="anchored" data-anchor-id="what-separates-ibd-and-non-ibd-respondents">What Separates IBD and Non-IBD Respondents?</h2>
-<ul>
-<li><strong>Significant Discriminators</strong>: The comparison of percentages of ’1’s between <code>IBDSEV_A=0</code> and <code>IBDSEV_A=1</code> groups highlighted several variables with substantial differences, indicating their potential as strong discriminators for IBD status.</li>
-<li><strong>Top Differentiators</strong>: <code>ARTHEV_A</code> (Arthritis Ever), <code>SHTPNUEV_A</code> (Pneumococcal Vaccine Ever), <code>RX12M_A</code> (Any Prescription in Past 12 Months), <code>HLTHCOND_A</code> (Health Condition), and <code>SOCWRKLIM_A</code> (Social/Work Limitations) show the largest absolute percentage differences, suggesting they are particularly relevant in distinguishing between individuals with and without IBD.</li>
-<li><strong>Health Conditions and Healthcare Utilization</strong>: Many of the top differentiating variables are related to chronic health conditions (e.g., <code>ARTHEV_A</code>, <code>DEPEV_A</code>, <code>ANXEV_A</code>, <code>HYPEV_A</code>), healthcare utilization (e.g., <code>RX12M_A</code>, <code>MEDRXTRT_A</code>), and functional limitations (<code>SOCWRKLIM_A</code>, <code>DISAB3_A</code>). This aligns with the understanding that IBD can be associated with various comorbidities and impact daily life.</li>
-<li><strong>Employment-Related Variables</strong>: Features related to employment status and benefits (<code>EMPWRKLSW1_A</code>, <code>EMPLASTWK_A</code>, <code>EMPWRKFT1_A</code>, <code>EMPSICKLV_A</code>, <code>EMPHEALINS_A</code>) also show notable differences, which could reflect the impact of chronic illness on work life.</li>
-</ul>
-<div id="cell-4" class="cell" data-outputid="505c02b7-94fb-4be0-9860-9f5d20615181" data-execution_count="15">
+<p>The first step was descriptive: which survey variables actually differ between respondents who report severe IBD (<code>IBDSEV_A = 1</code>) and those who don’t?</p>
+<div id="cell-3" class="cell" data-outputid="505c02b7-94fb-4be0-9860-9f5d20615181" data-execution_count="15">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -194,14 +185,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Several features show higher prevalence among individuals with IBD, and their patterns are consistent with what is known about the disease and its broader impacts.</p>
-<ul>
-<li><strong>Depression</strong> (DEPEV_A) and <strong>Anxiety</strong> (ANXEV_A) are more common in the IBD group, which may reflect the psychological burden of living with a chronic, unpredictable gastrointestinal condition.</li>
-<li>Frequent prescription use (RX12M_A) and reporting multiple health conditions (<strong>Hypertension, Arthiritis</strong>) likely reflect the presence of comorbidities and the need for ongoing medical management.</li>
-<li>Similarly, a higher incidence of <strong>social or work limitations</strong> (SOCWRKLIM_A) and <strong>overnight hospital stays</strong> (HOSPONGT_A) may indicate the functional impact of severe IBD on daily life.</li>
-</ul>
-<p>Conversely, employment-related features such as EMPWRKLSW1_A (Ever Worked for Employer), EMPLASTWK_A (Worked Last Week), EMPWRKFT1_A (Worked Full-time for Employer), and INCWRKO_A (Received Income from Wages/Salary) exhibit slightly higher or comparable prevalence among individuals without IBD. <strong>This suggests that chronic illness may impact employment or income-related activities.</strong></p>
-<div id="cell-6" class="cell" data-outputid="8f56c65e-88a9-40bf-995f-3f141c7bd1de" data-execution_count="18">
+<p>Comparing response rates between the two groups surfaced five variables with the largest gaps: a history of arthritis (<code>ARTHEV_A</code>), having received a pneumococcal vaccine (<code>SHTPNUEV_A</code>), any prescription use in the past 12 months (<code>RX12M_A</code>), a reported health condition (<code>HLTHCOND_A</code>), and social or work limitations (<code>SOCWRKLIM_A</code>). Most of the strongest discriminators cluster around chronic-disease comorbidity and healthcare utilization rather than demographics, which tracks with what’s already known about IBD: it rarely travels alone. Depression (<code>DEPEV_A</code>) and anxiety (<code>ANXEV_A</code>) were both more common among IBD respondents, plausibly reflecting the psychological weight of a chronic, unpredictable gastrointestinal condition, and so were frequent prescription use and overnight hospital stays (<code>HOSPONGT_A</code>), consistent with the ongoing medical management severe IBD requires. Employment-related variables ran the other way: respondents without IBD were slightly more likely to report currently working or receiving wage income, a pattern consistent with chronic illness limiting employment and income activity, though it’s suggestive here rather than something this analysis can pin down causally.</p>
+<div id="cell-5" class="cell" data-outputid="8f56c65e-88a9-40bf-995f-3f141c7bd1de" data-execution_count="18">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -210,16 +195,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>There are several noticeable clusters of dark red cells, indicating <strong>strong positive relationships:</strong></p>
-<ul>
-<li><p><strong>Health-related conditions:</strong> Features like DEPEV_A (Depression Ever) and ANXEV_A (Anxiety Ever) are strongly positively correlated, which is expected as these mental health conditions often co-occur. Similarly, HYPEV_A (Hypertension Ever) and CHLEV_A (High Cholesterol Ever) also show a strong positive correlation, reflecting common comorbidities.</p></li>
-<li><p><strong>Healthcare utilization:</strong> HLTHCOND_A (Health Condition) and MEDRXTRT_A (Weakened immune system due to prescriptions) are highly correlated, suggesting that individuals with weakening health conditions are likely to be receiving immunosuppressive medication treatment.</p></li>
-<li><p><strong>Employment-related:</strong> Features such as EMPWRKLSW1_A (Ever Worked for Employer), EMPLASTWK_A (Worked Last Week), and INCWRKO_A (Received Income from Wages/Salary) show strong inter-correlations, which is logical as these describe different aspects of being employed and earning income.</p></li>
-</ul>
+<p>A correlation matrix across the retained binary features showed the same comorbidity story from a different angle. Depression and anxiety were strongly positively correlated with each other, as expected for conditions that frequently co-occur. Reported health condition (<code>HLTHCOND_A</code>) and immune-suppressing prescription use (<code>MEDRXTRT_A</code>) were highly correlated too, consistent with sicker respondents being more likely to be on immunosuppressive treatment. And the employment-related features, ever worked for an employer, worked last week, wage income, clustered tightly with each other, which is unsurprising since they’re really different facets of the same underlying employment status.</p>
 </section>
 <section id="why-simple-separation-doesnt-work" class="level2">
 <h2 class="anchored" data-anchor-id="why-simple-separation-doesnt-work">Why Simple Separation Doesn’t Work</h2>
-<div id="cell-9" class="cell" data-outputid="d5e812c4-d55c-426c-9345-5ee5f58cab1b" data-execution_count="20">
+<div id="cell-8" class="cell" data-outputid="d5e812c4-d55c-426c-9345-5ee5f58cab1b" data-execution_count="20">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -228,19 +208,12 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<ul>
-<li><p><strong>Observation of Spatial Distribution</strong>: Upon examining the PCA plot, it is evident that the blue data points (representing <code>IBDSEV_A=0</code>) and the green data points (representing <code>IBDSEV_A=1</code>) are <strong>heavily intermixed</strong> throughout the 2-dimensional PCA space. There is no clear boundary or region where one class predominantly exists without significant overlap from the other.</p></li>
-<li><p><strong>Lack of Distinct Clusters</strong>: The two classes do not form distinct, well-separated clusters. Instead, <code>IBDSEV_A=1</code> (red points) appear to be scattered widely within the larger distribution of <code>IBDSEV_A=0</code> (blue points).</p></li>
-<li><p><strong>Inference of Separability</strong>: Based on this observation, PCA has <strong>not effectively separated</strong> the <code>IBDSEV_A</code> classes. The principal components, while capturing the most variance in the dataset, do not seem to project the data in a way that makes the two target classes linearly or easily non-linearly distinguishable.</p></li>
-<li><p><strong>Challenge for Predictive Models</strong>: The significant overlap between the two classes in the PCA-reduced space poses a considerable challenge for building effective predictive models based solely on these principal components.</p></li>
-</ul>
-<p>Unfortunately, this means that any classifier (e.g., Logistic Regression, SVM, Decision Tree) attempting to draw a decision boundary in this space <strong>would likely struggle to achieve high accuracy, precision, or recall for either class, especially the minority class (<code>IBDSEV_A=1</code>).</strong></p>
-<p>This is not a surprise, considering the nature of using survey data to find determiners of a rare chronic condition. However, it is still worth it to explore and see what results we arrive at.</p>
+<p>Projecting the feature set into two principal components made the modeling challenge visible before a single classifier was trained. Respondents with and without IBD were heavily intermixed across the PCA space, with no region where one class predominated without substantial overlap from the other. That means the strongest linear combinations of these features, the ones that explain the most variance in the data, don’t line up with the boundary that actually separates the two classes. Any classifier drawing a decision boundary in this reduced space would struggle, particularly for the minority IBD-positive class. That’s not surprising for a rare chronic condition inferred from a general-purpose health survey rather than clinical data, but it’s worth confirming directly before trusting downstream model results.</p>
 </section>
 <section id="modeling-an-imbalanced-rare-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="modeling-an-imbalanced-rare-outcome">Modeling an Imbalanced, Rare Outcome</h2>
-<p>Because IBD cases are rare, a model that predicts “no IBD” for everyone scores deceptively well on accuracy. I compared baseline, undersampled, and SMOTE-oversampled training across several classifiers (logistic regression, random forest, gradient boosting, and a stacking ensemble), evaluating on F1 rather than accuracy.</p>
-<div id="cell-12" class="cell" data-outputid="3d6155bc-2e24-4634-a664-52a765ddc677" data-execution_count="45">
+<p>Because severe IBD cases are rare, a model that predicts “no IBD” for everyone would score misleadingly well on accuracy while catching zero real cases. Eight classifiers, two dummy baselines, logistic regression, KNN, an MLP, random forest, random forest with bagging, and XGBoost, were each evaluated under three resampling regimes: no resampling (class weighting only), random undersampling, and SMOTE oversampling. Evaluation used 5-fold TimeSeriesSplit cross-validation to preserve the chronological order between the 2023 and 2024 survey years, with all preprocessing done inside pipelines to avoid leakage, and F1 score, rather than accuracy, as the primary metric.</p>
+<div id="cell-11" class="cell" data-outputid="3d6155bc-2e24-4634-a664-52a765ddc677" data-execution_count="45">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -249,7 +222,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<div id="cell-13" class="cell" data-outputid="cc3ba9a6-85a2-43ba-d6a9-a3088236bc0c" data-execution_count="48">
+<div id="cell-12" class="cell" data-outputid="cc3ba9a6-85a2-43ba-d6a9-a3088236bc0c" data-execution_count="48">
 <div class="cell-output cell-output-stdout">
 <pre><code>DataFrame of Test F1 Scores Across Sampling Methods (including Dummies, rounded to 3 decimal places):</code></pre>
 </div>
@@ -585,6 +558,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </div>
 </div>
+<p>The results bear out the accuracy warning directly: both dummy baselines scored an F1 of 0.033 to 0.049, better than zero only because of how F1 is computed, and every real model beat them, but not by a wide margin. Logistic regression was the most stable performer across all three regimes (F1 of 0.121 baseline, 0.124 with SMOTE, 0.122 with undersampling) and the best model overall in two of the three. Undersampling helped the weaker models the most: random forest with bagging nearly doubled its F1 (0.079 to 0.125), and the MLP roughly doubled (0.059 to 0.119). XGBoost showed the opposite pattern, it was competitive at baseline (0.108) but degraded under both undersampling (0.078) and SMOTE (0.089), suggesting it was already extracting what signal existed from the untouched class distribution and that resampling mostly added noise. No single model or resampling strategy solved the underlying problem; F1 scores stayed in the 0.05-to-0.13 range across the board, a ceiling set by how little separates the two classes in feature space, not by which algorithm was used.</p>
 <div id="cell-14" class="cell" data-outputid="6d6b524a-c810-40c6-a233-d85c0e7d4111" data-execution_count="41">
 <div class="cell-output cell-output-display">
 <div>
@@ -594,13 +568,26 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Feature importances from the fitted models lined up with the earlier discriminator analysis: arthritis history, frequent prescription use, and the mental-health comorbidities (depression and anxiety) were consistently ranked among the strongest predictors across models. That consistency is the most clinically meaningful result of the analysis: even where predictive performance was modest, the models converged on the same real, clinically sensible signal that IBD overlaps heavily with other chronic conditions rather than presenting in isolation.</p>
 </section>
-<section id="takeaway" class="level2">
-<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
-<p>No single model or resampling strategy fully solved the class-imbalance problem. IBD-positive respondents didn’t separate cleanly in feature space (PCA showed heavy overlap between classes), and F1 scores across all approaches stayed modest. But the exercise surfaced a real, clinically sensible signal: arthritis, frequent prescription use, and mental-health comorbidities (depression, anxiety) were consistently the strongest predictors, which lines up with IBD’s known pattern of overlapping chronic conditions. The bigger lesson was methodological: for rare-disease prediction, feature selection and evaluation-metric choice matter more than model choice.</p>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>No model or resampling strategy fully solved the class-imbalance problem here. IBD-positive respondents didn’t separate cleanly in feature space, PCA showed heavy overlap between classes, and F1 scores across every approach tested stayed modest. But the exercise surfaced a real signal: arthritis, frequent prescription use, and mental-health comorbidities were consistently the strongest predictors, consistent with IBD’s well-documented pattern of overlapping chronic conditions. The larger lesson was methodological rather than algorithmic: for rare-disease prediction from survey data, feature selection, evaluation-metric choice, and honest accounting for class imbalance matter more than which classifier gets used.</p>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>NHIS is self-reported survey data, not clinical diagnosis, so the target variable reflects what respondents reported rather than a confirmed medical record, and the severity threshold (severe ulcerative colitis or Crohn’s specifically) excludes mild and moderate IBD cases entirely. The two-year window (2023-2024) is also short for a chronic, low-prevalence condition, and the demographic features (race, region, education) necessarily collapse real heterogeneity into broad categories. None of this invalidates the comorbidity signal the models converged on, but it does mean the resulting F1 scores describe a ceiling for this data and this approach, not a ceiling for IBD prediction generally.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>National Center for Health Statistics. <a href="https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NHIS/2023/adult-codebook.pdf">NHIS 2023 Sample Adult Codebook</a>.</li>
+<li>National Center for Health Statistics. <a href="https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NHIS/2024/adult-codebook.pdf">NHIS 2024 Sample Adult Codebook</a>.</li>
+<li>CDC. <a href="https://www.cdc.gov/nchs/nhis/documentation/2024-nhis.html">National Health Interview Survey documentation</a>.</li>
+</ul>
+<p><em>Course: SI 670, University of Michigan.</em></p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
